@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sovereign App — Build Without Permission</title>
+  <meta name="description" content="Type an idea, get a live app you fully own. Your GitHub repo, your Vercel deployment, your Supabase database. No credits, no lock-in, no surprises." />
+  <meta property="og:title" content="Sovereign App — Build Without Permission" />
+  <meta property="og:description" content="Type an idea, get a live app you fully own. Your code. Your infrastructure. Your future." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sovereign App — Build Without Permission" />
+  <meta name="twitter:description" content="Type an idea, get a live app you fully own. No credits, no lock-in, no surprises." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Sovereign App",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Type an idea, get a live app you fully own. Your GitHub repo, your Vercel deployment, your Supabase database.",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @font-face {
+      font-family: 'System Serif';
+      src: local('Georgia'), local('Times New Roman'), local('serif');
+      font-display: swap;
+    }
+
+    :root {
+      --acid: #c8f060;
+      --black: #0e0d0b;
+      --cream: #f2efe8;
+      --gray: #9a9890;
+      --dark-gray: #1a1917;
+      --card-bg: #141311;
+      --font-serif: Georgia, 'Times New Roman', serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', 'Courier New', monospace;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-5: 40px;
+      --space-6: 48px;
+      --space-8: 64px;
+      --space-10: 80px;
+      --space-12: 96px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--cream);
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: var(--acid); text-decoration: none; transition: opacity 0.2s; }
+    a:hover { opacity: 0.8; }
+    a:focus-visible { outline: 2px solid var(--acid); outline-offset: 4px; border-radius: 2px; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      background: rgba(14, 13, 11, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200, 240, 96, 0.08);
+    }
+
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span { color: var(--acid); }
+
+    .nav-links { display: flex; align-items: center; gap: var(--space-4); }
+    .nav-links a {
+      font-size: 14px;
+      color: var(--gray);
+      min-height: 44px;
+      min-width: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-links a:hover { color: var(--cream); }
+
+    .nav-cta {
+      background: var(--acid) !important;
+      color: var(--black) !important;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: var(--font-mono);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 24px rgba(200, 240, 96, 0.25); opacity: 1 !important; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: var(--space-12) var(--space-4) var(--space-8);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: 6px 16px;
+      background: rgba(200, 240, 96, 0.08);
+      border: 1px solid rgba(200, 240, 96, 0.2);
+      border-radius: 100px;
+      font-size: 13px;
+      color: var(--acid);
+      margin-bottom: var(--space-5);
+      letter-spacing: 0.5px;
+    }
+
+    .hero-badge::before { content: '●'; font-size: 8px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(44px, 8vw, 80px);
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: var(--cream);
+      margin-bottom: var(--space-4);
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--acid);
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2.2vw, 20px);
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto var(--space-6);
+      line-height: 1.8;
+    }
+
+    /* ─── INPUT GROUP ─── */
+    .idea-input-group {
+      width: 100%;
+      max-width: 620px;
+      position: relative;
+      margin: 0 auto var(--space-5);
+    }
+
+    .idea-input-group label {
+      display: block;
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: var(--space-1);
+      text-align: left;
+    }
+
+    .idea-input-wrap {
+      display: flex;
+      align-items: stretch;
+      background: var(--card-bg);
+      border: 1px solid rgba(200, 240, 96, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .idea-input-wrap:focus-within {
+      border-color: var(--acid);
+      box-shadow: 0 0 0 3px rgba(200, 240, 96, 0.12);
+    }
+
+    .idea-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 18px 20px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      color: var(--cream);
+      outline: none;
+      min-height: 44px;
+    }
+
+    .idea-input::placeholder { color: #767676; }
+
+    .idea-btn {
+      background: var(--acid);
+      color: var(--black);
+      border: none;
+      padding: 18px 32px;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .idea-btn:hover { background: #d4f578; }
+    .idea-btn:active { transform: scale(0.98); }
+    .idea-btn:focus-visible { outline: 2px solid var(--cream); outline-offset: -4px; }
+
+    .hero-hint {
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    .hero-hint span { color: var(--acid); font-weight: 600; }
+
+    /* ─── MANIFESTO ─── */
+    .manifesto {
+      padding: var(--space-10) var(--space-4);
+      text-align: center;
+      border-top: 1px solid rgba(200, 240, 96, 0.06);
+    }
+
+    .manifesto-text {
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 4vw, 40px);
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--cream);
+      max-width: 750px;
+      margin: 0 auto;
+      letter-spacing: -1px;
+    }
+
+    .manifesto-text em { color: var(--acid); font-style: italic; }
+
+    /* ─── FEATURES ─── */
+    .features {
+      padding: var(--space-10) var(--space-4);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+
+    h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      color: var(--cream);
+      margin-bottom: var(--space-2);
+    }
+
+    .features-sub { color: var(--gray); font-size: 16px; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-3);
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(200, 240, 96, 0.06);
+      border-radius: 16px;
+      padding: var(--space-5);
+      transition: border-color 0.25s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(200, 240, 96, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(200, 240, 96, 0.1);
+      border-radius: 12px;
+      font-size: 22px;
+      margin-bottom: var(--space-3);
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: var(--space-1);
+      letter-spacing: -0.5px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    .how {
+      padding: var(--space-10) var(--space-4);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .how-header { text-align: center; margin-bottom: var(--space-8); }
+
+    .steps { display: flex; flex-direction: column; gap: var(--space-5); }
+
+    .step {
+      display: flex;
+      gap: var(--space-4);
+      align-items: flex-start;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--acid);
+      color: var(--black);
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 20px;
+      border-radius: 50%;
+    }
+
+    .step-content h3 {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: var(--cream);
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .step-content p { font-size: 14px; color: var(--gray); line-height: 1.7; }
+
+    /* ─── AUDIENCES ─── */
+    .audiences {
+      padding: var(--space-10) var(--space-4);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .audiences-header { text-align: center; margin-bottom: var(--space-8); }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: var(--space-4);
+    }
+
+    .audience-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(200, 240, 96, 0.06);
+      border-radius: 16px;
+      padding: var(--space-6);
+    }
+
+    .audience-card h3 {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      color: var(--acid);
+      margin-bottom: var(--space-2);
+      letter-spacing: -0.5px;
+    }
+
+    .audience-card p { font-size: 15px; color: var(--gray); margin-bottom: var(--space-3); line-height: 1.7; }
+
+    .audience-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .audience-card li {
+      font-size: 14px;
+      color: var(--cream);
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .audience-card li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--acid);
+    }
+
+    /* ─── OWNERSHIP ─── */
+    .ownership {
+      padding: var(--space-10) var(--space-4);
+      text-align: center;
+      border-top: 1px solid rgba(200, 240, 96, 0.06);
+    }
+
+    .ownership h2 { margin-bottom: var(--space-4); }
+
+    .own-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-3);
+      max-width: 700px;
+      margin: 0 auto var(--space-6);
+    }
+
+    .own-item {
+      background: var(--card-bg);
+      border: 1px solid rgba(200, 240, 96, 0.1);
+      border-radius: 10px;
+      padding: 14px 24px;
+      font-size: 14px;
+      color: var(--cream);
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    .own-item::before { content: '✓'; color: var(--acid); font-weight: 700; }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      padding: var(--space-12) var(--space-4);
+      text-align: center;
+    }
+
+    .cta-section h2 { margin-bottom: var(--space-2); }
+    .cta-section p { color: var(--gray); margin-bottom: var(--space-5); font-size: 16px; }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-1);
+      background: var(--acid);
+      color: var(--black);
+      padding: 18px 48px;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      transition: transform 0.15s, box-shadow 0.2s;
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(200, 240, 96, 0.3);
+      opacity: 1 !important;
+    }
+
+    .cta-button:focus-visible { outline: 2px solid var(--cream); outline-offset: 4px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: var(--space-6) var(--space-4);
+      border-top: 1px solid rgba(200, 240, 96, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-3);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer-left { font-size: 13px; color: var(--gray); }
+    .footer-links { display: flex; gap: var(--space-4); }
+    .footer-links a { font-size: 13px; color: var(--gray); min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; }
+    .footer-links a:hover { color: var(--cream); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: var(--space-2) var(--space-3); }
+      .nav-links .hide-mobile { display: none; }
+      .hero { padding: var(--space-10) var(--space-3) var(--space-6); }
+      .idea-input-wrap { flex-direction: column; }
+      .idea-btn { padding: 16px; }
+      .step { flex-direction: column; gap: var(--space-2); }
+      .audience-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 320px) {
+      h1 { font-size: 36px; letter-spacing: -1px; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── FOCUS VISIBLE GLOBAL ─── */
+    *:focus-visible {
+      outline: 2px solid var(--acid);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    /* ─── SKIP LINK ─── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: var(--space-2);
+      background: var(--acid);
+      color: var(--black);
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-weight: 700;
+      z-index: 200;
+      font-size: 14px;
+    }
+    .skip-link:focus { top: var(--space-2); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- NAV -->
+  <nav role="navigation" aria-label="Main navigation">
+    <div class="nav-logo">Sovereign<span>.</span></div>
+    <div class="nav-links">
+      <a href="#how" class="hide-mobile">How it works</a>
+      <a href="#features" class="hide-mobile">Features</a>
+      <a href="#start" class="nav-cta" role="button">Start building</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero-badge" aria-live="polite">Now in public beta</div>
+      <h1>Build without<br /><em>permission.</em></h1>
+      <p class="hero-sub">Type your idea. Get a live app in seconds. Own every line of code, every deployment, every byte of data. No credits, no lock-in, no surprises.</p>
+
+      <div class="idea-input-group">
+        <label for="idea-input">Describe your app idea</label>
+        <div class="idea-input-wrap">
+          <input
+            id="idea-input"
+            class="idea-input"
+            type="text"
+            placeholder="A booking tool for independent barbers..."
+            maxlength="500"
+            aria-describedby="idea-hint"
+          />
+          <button class="idea-btn" type="button" aria-label="Build my app from this idea">Build my app →</button>
+        </div>
+      </div>
+      <p class="hero-hint" id="idea-hint"><span>Your code.</span> Your infrastructure. Your future.</p>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section class="manifesto" aria-label="Our philosophy">
+      <p class="manifesto-text">Every other platform makes you a <em>tenant.</em><br />Sovereign makes you an <em>owner.</em></p>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how" id="how" aria-label="How it works">
+      <div class="how-header">
+        <h2>Three steps to ownership</h2>
+        <p class="features-sub">From idea to live app in under two minutes.</p>
+      </div>
+      <div class="steps" role="list">
+        <article class="step" role="listitem">
+          <div class="step-num" aria-hidden="true">1</div>
+          <div class="step-content">
+            <h3>Describe your idea</h3>
+            <p>Type what you want to build in plain English. A SaaS dashboard, a waitlist page, a booking system — anything.</p>
+          </div>
+        </article>
+        <article class="step" role="listitem">
+          <div class="step-num" aria-hidden="true">2</div>
+          <div class="step-content">
+            <h3>We generate everything</h3>
+            <p>Production-ready code, a GitHub repository, a Vercel deployment, and a Supabase database — all created in your accounts.</p>
+          </div>
+        </article>
+        <article class="step" role="listitem">
+          <div class="step-num" aria-hidden="true">3</div>
+          <div class="step-content">
+            <h3>You own it completely</h3>
+            <p>Eject anytime. Modify anything. Sovereign disappears and your app keeps running. Zero dependency on us.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features" aria-label="Features">
+      <div class="features-header">
+        <h2>Everything a real app needs</h2>
+        <p class="features-sub">Not a prototype. Not a toy. Production infrastructure from day one.</p>
+      </div>
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">⚡</div>
+          <h3>Instant deployment</h3>
+          <p>Your app is live on Vercel the moment it's generated. Custom domain support, automatic HTTPS, edge network — all included.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">🔒</div>
+          <h3>Security by default</h3>
+          <p>Row-level security on every table. Server-side auth validation. Rate limiting. Secure headers. No shortcuts, no exceptions.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">📦</div>
+          <h3>Your GitHub repo</h3>
+          <p>Every line of code pushed to your own GitHub repository. Full git history. Branch, fork, or rewrite — it's yours.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">🗄️</div>
+          <h3>Your Supabase database</h3>
+          <p>Postgres database in your own Supabase project. Auth, storage, real-time — all configured and ready to scale.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">🎨</div>
+          <h3>Beautiful by default</h3>
+          <p>WCAG AA accessible. Mobile-first responsive. Real copy, not lorem ipsum. Designs that impress investors and users alike.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" aria-hidden="true">🚀</div>
+          <h3>Zero lock-in</h3>
+          <p>No proprietary runtime. No special imports. Standard React, standard APIs. Delete your Sovereign account and nothing breaks.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- AUDIENCES -->
+    <section class="audiences" aria-label="Who this is for">
+      <div class="audiences-header">
+        <h2>Built for builders</h2>
+        <p class="features-sub">Whether you write code or not, Sovereign meets you where you are.</p>
+      </div>
+      <div class="audience-grid">
+        <article class="audience-card">
+          <h3>For founders</h3>
+          <p>You have the vision. You shouldn't need to learn React to validate it.</p>
+          <ul>
+            <li>Launch an MVP in minutes, not months</li>
+            <li>Show investors a live product, not a slide deck</li>
+            <li>Hire developers later — your codebase is ready for them</li>
+            <li>No monthly platform fees eating your runway</li>
+          </ul>
+        </article>
+        <article class="audience-card">
+          <h3>For developers</h3>
+          <p>You know how to code. You're tired of spending a week on auth and config.</p>
+          <ul>
+            <li>Skip the boilerplate — go straight to business logic</li>
+            <li>Clean, readable code you'd be proud to maintain</li>
+            <li>Security best practices baked in from line one</li>
+            <li>Standard stack: React, Vite, Supabase, Vercel</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- OWNERSHIP -->
+    <section class="ownership" aria-label="What you own">
+      <h2>You own everything</h2>
+      <div class="own-grid">
+        <div class="own-item">GitHub repository</div>
+        <div class="own-item">Vercel deployment</div>
+        <div class="own-item">Supabase database</div>
+        <div class="own-item">Custom domain</div>
+        <div class="own-item">All source code</div>
+        <div class="own-item">User data</div>
+        <div class="own-item">Git history</div>
+        <div class="own-item">Full admin access</div>
+      </div>
+      <p class="features-sub">Delete your Sovereign account tomorrow. Your app keeps running forever.</p>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="start" aria-label="Get started">
+      <h2>Ready to build?</h2>
+      <p>Type an idea. Get a live app. Own everything.</p>
+      <a href="#main" class="cta-button" role="button">Start building for free →</a>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer role="contentinfo">
+    <div class="footer-left">© 2025 Sovereign App. Your code. Your infrastructure. Your future.</div>
+    <div class="footer-links">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="mailto:hello@sovereign.app">Contact</a>
+    </div>
+  </footer>
+</body>
+</html>
